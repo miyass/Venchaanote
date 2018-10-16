@@ -2,17 +2,24 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Layout, Menu, Icon } from 'antd'
 
-
 const { Sider } = Layout;
 
 
 export default class Sidebar extends React.Component {
+
+  addContents(e) {
+    console.log(e);
+  }
+
   render() {
     return (
-      <Sider width={screen.width / 4} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
+      <Sider width={100} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
         <Menu theme="dark">
         <Menu.Item key="icon">
           <Icon type="user" />
+        </Menu.Item>
+        <Menu.Item key="plus" onClick={this.addContents}>
+          <Icon type="plus-circle" theme="outlined" />
         </Menu.Item>
         <Menu.Item key="sub1">
           <span>test1</span>

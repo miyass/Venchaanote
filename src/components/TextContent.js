@@ -1,28 +1,43 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Layout } from 'antd'
+import { Layout, Row, Col } from 'antd'
+
 import {Editor, EditorState} from 'draft-js';
+import ReactMarkdown from 'react-markdown'
 
-const { Header, Content, Footer } = Layout;
-
+const { Content } = Layout;
+let markdown = ""
 
 export default class TextContent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {editorState: EditorState.createEmpty()};
-    this.onChange = (editorState) => this.setState({editorState});
+    this.state = {
+      editorState: EditorState.createEmpty(),
+      markdown: ""
+    };
+    this.onChange = (editorState) => {
+      // console.log(editorState.getCurrentContent().getFirstBlock().getText());
+      let contents = editorState.getCurrentContent().getBlockMap()
+      let preTexts = ""
+      contents.map((content) => {
+        preTexts += content.getText() + "\n";
+      });
+      markdown = preTexts;
+      this.setState({markdown});
+      this.setState({editorState});
+    };
   }
   render() {
     return(
-      <Layout style={{ marginLeft: screen.width / 4 }}>
-        <Header style={{ color: 'white', backgroundColor: 'black' }}>
-          Header
-        </Header>
-         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <span>Text</span>
-          <Editor editorState={this.state.editorState} onChange={this.onChange} placeHolder="write something.." />
+      <Layout style={{ marginLeft: 100 }}>
+         <Content style={{ margin: '24px 16px 24px' }}>
+           <Col span={12} style={{ backgroundColor: 'gray' }}>
+            <Editor editorState={this.state.editorState} onChange={this.onChange} />
+          </Col>
+          <Col span={12} style={{ backgroundColor: 'lightGray', color: 'white'}}>
+            <ReactMarkdown source={this.state.markdown} />
+          </Col>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Footer</Footer>
       </Layout>
     )
   }
