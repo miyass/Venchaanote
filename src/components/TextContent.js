@@ -1,22 +1,22 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Layout, Row, Col } from 'antd'
-
-import {Editor, EditorState} from 'draft-js';
+import { connect } from 'react-redux'
+import { Layout, Row, Col, Input } from 'antd'
+import {Editor, EditorState, ContentState} from 'draft-js';
 import ReactMarkdown from 'react-markdown'
 
 const { Content } = Layout;
 let markdown = ""
 
-export default class TextContent extends React.Component {
+class TextContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
-      markdown: ""
+      markdown: "",
+      title: "title",
     };
     this.onChange = (editorState) => {
-      // console.log(editorState.getCurrentContent().getFirstBlock().getText());
       let contents = editorState.getCurrentContent().getBlockMap()
       let preTexts = ""
       contents.map((content) => {
@@ -26,15 +26,34 @@ export default class TextContent extends React.Component {
       this.setState({markdown});
       this.setState({editorState});
     };
+
+    // ライフサイクル外の関数から state を参照するための bind
+    this.titleChange = this.titleChange.bind(this);
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      title: nextProps.perContent.title,
+      editorState: EditorState.createWithContent(ContentState.createFromText(nextProps.perContent.content)),
+      markdown: nextProps.perContent.content
+    });
+  }
+
+  titleChange(e){
+    this.setState({
+      title: e.target.value
+    });
+  }
+
   render() {
     return(
       <Layout style={{ marginLeft: 100 }}>
          <Content style={{ margin: '24px 16px 24px' }}>
-           <Col span={12} style={{ backgroundColor: 'gray' }}>
+           <Input placeholder="Title" value={this.state.title} onChange={this.titleChange} />
+           <Col span={12}>
             <Editor editorState={this.state.editorState} onChange={this.onChange} />
           </Col>
-          <Col span={12} style={{ backgroundColor: 'lightGray', color: 'white'}}>
+          <Col span={12}>
             <ReactMarkdown source={this.state.markdown} />
           </Col>
         </Content>
@@ -42,3 +61,11 @@ export default class TextContent extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    perContent: state.content.perContent,
+  }
+}
+
+export default connect(mapStateToProps)(TextContent)
