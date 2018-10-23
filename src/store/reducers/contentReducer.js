@@ -10,10 +10,25 @@ const initState = {
 }
 
 const contentReducer = (state = initState, action) => {
+  //今タイプしてるcontentのidは取れるけど不安定かも...
+  let currentId = state.perContent.id;
+  let currentContents = state.contents;
   switch (action.type) {
     case 'VIEW_CONTENT':
       return Object.assign({}, state, {
         perContent: action.perContent
+      });
+    case 'CHANGE_TITLE':
+      //タイトル変更時のみsidebarを再レンダリングしたいので、sliceメソッド適用
+      currentContents = currentContents.slice(0)
+      currentContents[currentId - 1].title = action.title;
+      return Object.assign({}, state, {
+        contents: currentContents
+      });
+    case 'CHANGE_CONTENT':
+      currentContents[currentId - 1].content = action.content
+      return Object.assign({}, state, {
+        contents: currentContents
       });
     default:
       return state

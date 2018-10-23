@@ -1,18 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
 import { Layout, Menu, Icon } from 'antd'
-const { Sider } = Layout;
 
 import { viewContent } from '../store/actions/contentActions'
 
 import ContentList from './ContentList'
-
-import { connect } from 'react-redux'
+const { Sider } = Layout;
 
 class Sidebar extends React.Component {
-
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   addContent(e) {
@@ -24,6 +22,7 @@ class Sidebar extends React.Component {
   }
 
   render() {
+    console.log("Sidebar再レンダリング");
     return (
       <Sider width={100} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
         <Menu theme="dark">
@@ -45,12 +44,15 @@ class Sidebar extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log("sidebarのmapStateToProps");
+  console.log(state);
   return {
     contents: state.content.contents
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
+  console.log("sidebarのmapDispatchToProps");
   return {
     viewContent: (perContent) => dispatch(viewContent(perContent))
   }
