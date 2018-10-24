@@ -25,7 +25,6 @@ class TextContent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("textcontentのcomponentWillReceiveProps");
     this.setState({
       title: nextProps.perContent.title,
       editorState: EditorState.createWithContent(ContentState.createFromText(nextProps.perContent.content)),
@@ -53,7 +52,6 @@ class TextContent extends React.Component {
   }
 
   render() {
-    console.log("TextContent再レンダリング");
     return(
       <Layout style={{ marginLeft: 100 }}>
          <Content style={{ margin: '24px 16px 24px' }}>
@@ -71,14 +69,12 @@ class TextContent extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log("textcontentのmapStateToProps");
   return {
     perContent: state.content.perContent,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  console.log("textcontentのmapDispatchToProps");
   return {
     titleChange: (title) => dispatch(titleChange(title)),
     contentChange: (content) => dispatch(contentChange(content))

@@ -15,6 +15,7 @@ const contentReducer = (state = initState, action) => {
   let currentContents = state.contents;
   switch (action.type) {
     case 'VIEW_CONTENT':
+      console.log(action);
       return Object.assign({}, state, {
         perContent: action.perContent
       });

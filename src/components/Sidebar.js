@@ -10,7 +10,14 @@ const { Sider } = Layout;
 
 class Sidebar extends React.Component {
   constructor(props) {
+    console.log("constructor");
     super(props);
+  }
+
+  componentDidMount() {
+    //初期のcontent用。
+    let lastNum = this.props.contents.length;
+    this.props.viewContent(this.props.contents[lastNum - 1]);
   }
 
   addContent(e) {
@@ -22,10 +29,9 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    console.log("Sidebar再レンダリング");
     return (
       <Sider width={100} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
-        <Menu theme="dark">
+        <Menu theme="dark" defaultSelectedKeys={[this.props.contents.length.toString()]}>
           <Menu.Item key="icon">
             <Icon type="user" />
           </Menu.Item>
@@ -44,15 +50,13 @@ class Sidebar extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log("sidebarのmapStateToProps");
-  console.log(state);
+  console.log("mapStateToProps");
   return {
     contents: state.content.contents
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  console.log("sidebarのmapDispatchToProps");
   return {
     viewContent: (perContent) => dispatch(viewContent(perContent))
   }
