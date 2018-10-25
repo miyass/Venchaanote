@@ -1,7 +1,12 @@
-export const viewContent = (perContent) => {
-  console.log(perContent);
+export const viewContent = (selectContent) => {
   return (dispatch, getState) => {
-    dispatch({ type: 'VIEW_CONTENT', perContent: perContent})
+    dispatch({ type: 'VIEW_CONTENT', selectContent: selectContent})
+  }
+}
+
+export const addContent = () => {
+  return (dispatch, getState) => {
+    dispatch({ type: 'ADD_CONTENT' })
   }
 }
 

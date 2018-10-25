@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Layout, Row, Col, Input } from 'antd'
-import {Editor, EditorState, ContentState} from 'draft-js';
+import {Editor, EditorState, ContentState} from 'draft-js'
 import ReactMarkdown from 'react-markdown'
 
 import { titleChange, contentChange } from '../store/actions/contentActions'
@@ -26,9 +26,9 @@ class TextContent extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      title: nextProps.perContent.title,
-      editorState: EditorState.createWithContent(ContentState.createFromText(nextProps.perContent.content)),
-      markdown: nextProps.perContent.content
+      title: nextProps.selectContent.title,
+      editorState: EditorState.createWithContent(ContentState.createFromText(nextProps.selectContent.content)),
+      markdown: nextProps.selectContent.content
     });
   }
 
@@ -53,9 +53,9 @@ class TextContent extends React.Component {
 
   render() {
     return(
-      <Layout style={{ marginLeft: 100 }}>
+      <Layout style={{ marginLeft: 100, height: '100vh' }}>
          <Content style={{ margin: '24px 16px 24px' }}>
-           <Input placeholder="Title" value={this.state.title} onChange={this.titleChange} />
+           <input type="text" className="titleInputField" placeholder="Title" value={this.state.title} onChange={this.titleChange} />
            <Col span={12}>
             <Editor editorState={this.state.editorState} onChange={this.contentChange} />
           </Col>
@@ -70,7 +70,7 @@ class TextContent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    perContent: state.content.perContent,
+    selectContent: state.content.selectContent,
   }
 }
 

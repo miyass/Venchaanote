@@ -1,17 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { Layout, Menu, Icon } from 'antd'
+import { Button, Layout, Menu, Icon } from 'antd'
 
-import { viewContent } from '../store/actions/contentActions'
+import { viewContent, addContent } from '../store/actions/contentActions'
 
 import ContentList from './ContentList'
 const { Sider } = Layout;
 
 class Sidebar extends React.Component {
   constructor(props) {
-    console.log("constructor");
     super(props);
+
+    this.addContent = this.addContent.bind(this);
   }
 
   componentDidMount() {
@@ -20,8 +21,8 @@ class Sidebar extends React.Component {
     this.props.viewContent(this.props.contents[lastNum - 1]);
   }
 
-  addContent(e) {
-    console.log(e);
+  addContent() {
+    this.props.addContent()
   }
 
   viewContent(e) {
@@ -31,10 +32,7 @@ class Sidebar extends React.Component {
   render() {
     return (
       <Sider width={100} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
-        <Menu theme="dark" defaultSelectedKeys={[this.props.contents.length.toString()]}>
-          <Menu.Item key="icon">
-            <Icon type="user" />
-          </Menu.Item>
+        <Menu theme="dark" selectedKeys={[this.props.selectContent.id]}>
           <Menu.Item key="plus" onClick={this.addContent}>
             <Icon type="plus-circle" theme="outlined" />
           </Menu.Item>
@@ -44,21 +42,23 @@ class Sidebar extends React.Component {
             </Menu.Item>
           )}
         </Menu>
+
       </Sider>
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  console.log("mapStateToProps");
   return {
-    contents: state.content.contents
+    contents: state.content.contents,
+    selectContent: state.content.selectContent
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    viewContent: (perContent) => dispatch(viewContent(perContent))
+    addContent: () => dispatch(addContent()),
+    viewContent: (selectContent) => dispatch(viewContent(selectContent))
   }
 }
 
