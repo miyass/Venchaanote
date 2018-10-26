@@ -18,11 +18,19 @@ const contentReducer = (state = initState, action) => {
       });
     case 'ADD_CONTENT':
       currentContents = currentContents.slice(0)
-      let emptyContent = {id: (currentContents.length + 1).toString(), title: '', content: ''}
-      currentContents.push(emptyContent);
+      let emptyNewContent = {id: (currentContents.length + 1).toString(), title: '', content: ''}
+      currentContents.push(emptyNewContent);
       return Object.assign({}, state, {
         contents: currentContents,
-        selectContent: emptyContent
+        selectContent: emptyNewContent
+      });
+    case 'DELETE_CONTENT':
+      //Deleteの現状のバグ：contentsが0になった時、selectしてるやつを削除した時
+      const newContent = currentContents.filter((content) => {
+        return !(action.contentId === content.id);
+      });
+      return Object.assign({}, state, {
+        contents: newContent,
       });
     case 'CHANGE_TITLE':
       //タイトル変更時のみsidebarを再レンダリングしたいので、sliceメソッド適用

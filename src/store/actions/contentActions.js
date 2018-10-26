@@ -10,6 +10,12 @@ export const addContent = () => {
   }
 }
 
+export const deleteContent = (contentId) => {
+  return (dispatch, getState) => {
+    dispatch({ type: 'DELETE_CONTENT', contentId: contentId })
+  }
+}
+
 export const titleChange = (title) => {
   return (dispatch, getState) => {
     dispatch({ type: 'CHANGE_TITLE', title: title})

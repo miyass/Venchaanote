@@ -1,15 +1,42 @@
 import React from 'react'
-import { Layout, Menu, Icon } from 'antd'
+import { connect } from 'react-redux'
+import { Layout, Menu, Icon, Dropdown } from 'antd'
+import { deleteContent } from '../store/actions/contentActions'
 
 class ContentList extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
+
+    this.deleteContent = this.deleteContent.bind(this);
   }
+
+  deleteContent() {
+    this.props.deleteContent(this.props.contentId)
+  }
+
   render() {
+    const menu = (
+      <Menu>
+        <Menu.Item key="delete" onClick={this.deleteContent}>Delete</Menu.Item>
+      </Menu>
+    );
+
     return(
-      <p>{this.props.title}</p>
+      <Dropdown overlay={menu} trigger={['contextMenu']}>
+        <div style={{width: '100%', height: '100%'}}>
+          <p>{this.props.title}</p>
+        </div>
+      </Dropdown>
+
     )
   }
 }
 
-export default ContentList
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteContent: (contentId) => dispatch(deleteContent(contentId))
+  }
+}
+
+
+export default connect(null, mapDispatchToProps)(ContentList)
