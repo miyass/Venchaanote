@@ -29,11 +29,6 @@ class Sidebar extends React.Component {
     this.props.viewContent(e)
   }
 
-  menuRightClick(e) {
-    console.log("rightClick");
-    console.log(e);
-  }
-
   render() {
     return (
       <Sider width={100} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
@@ -42,9 +37,9 @@ class Sidebar extends React.Component {
             <Icon type="plus-circle" theme="outlined" />
           </Menu.Item>
           { this.props.contents.map(con =>
-              <Menu.Item key={con.id} onClick={this.viewContent.bind(this, con)} >
-                <ContentList title={con.title} contentId={con.id} />
-              </Menu.Item>
+          <Menu.Item key={con.id} onClick={this.viewContent.bind(this, con)} >
+            <ContentList title={con.title} contentId={con.id} />
+          </Menu.Item>
 
           )}
         </Menu>

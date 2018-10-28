@@ -5,6 +5,7 @@ const initState = {
   selectContent: {
     id: '', title: '', content: ''
   },
+  idCount: 1
 }
 
 const contentReducer = (state = initState, action) => {
@@ -18,29 +19,56 @@ const contentReducer = (state = initState, action) => {
       });
     case 'ADD_CONTENT':
       currentContents = currentContents.slice(0)
-      let emptyNewContent = {id: (currentContents.length + 1).toString(), title: '', content: ''}
+      let id = state.idCount + 1
+      let emptyNewContent = {id: id.toString(), title: '', content: ''}
       currentContents.push(emptyNewContent);
+      currentContents.sort((a,b) => {
+        return b.id - a.id
+      });
       return Object.assign({}, state, {
         contents: currentContents,
-        selectContent: emptyNewContent
+        selectContent: emptyNewContent,
+        idCount: id
       });
     case 'DELETE_CONTENT':
-      //Deleteの現状のバグ：contentsが0になった時、selectしてるやつを削除した時
-      const newContent = currentContents.filter((content) => {
+      let newSelectContent = state.selectContent;
+      let selectContentOrder = currentContents.indexOf(state.selectContent)
+      //最後の一個を削除した時の処理
+      if(currentContents.length === 1) {
+        let id = state.idCount + 1
+        newSelectContent = {id: id.toString() , title: 'sample', content: ''};
+        currentContents = [newSelectContent];
+        return Object.assign({}, state, {
+          contents: currentContents,
+          selectContent: newSelectContent,
+          idCount: id
+        })
+      }
+      //セレクトしてるやつと削除するやつが一致しているときの処理
+      if(currentId === action.contentId) {
+        if(selectContentOrder === 0) {
+          selectContentOrder += 1;
+          newSelectContent = currentContents[selectContentOrder]
+        } else {
+          newSelectContent = currentContents[selectContentOrder -  1]
+        }
+      }
+      const newContents = currentContents.filter((content) => {
         return !(action.contentId === content.id);
       });
       return Object.assign({}, state, {
-        contents: newContent,
+        contents: newContents,
+        selectContent: newSelectContent
       });
     case 'CHANGE_TITLE':
       //タイトル変更時のみsidebarを再レンダリングしたいので、sliceメソッド適用
       currentContents = currentContents.slice(0)
-      currentContents[currentId - 1].title = action.title;
+      state.selectContent.title = action.title;
       return Object.assign({}, state, {
         contents: currentContents
       });
     case 'CHANGE_CONTENT':
-      currentContents[currentId - 1].content = action.content
+      state.selectContent.content = action.content
       return Object.assign({}, state, {
         contents: currentContents
       });
