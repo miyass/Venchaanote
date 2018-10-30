@@ -1,9 +1,9 @@
 const initState = {
   contents: [
-    {id: '1', title: 'sample', content: '# title \n# 1'},
+
   ],
   selectContent: {
-    id: '', title: '', content: ''
+
   },
   idCount: 1
 }
@@ -13,7 +13,22 @@ const contentReducer = (state = initState, action) => {
   let currentId = state.selectContent.id;
   let currentContents = state.contents;
   switch (action.type) {
+    case 'INITIAL_CONTENT':
+      let initialContents = []
+      for (let key in action.contents) {
+        initialContents.push(action.contents[key]);
+      }
+      currentContents = initialContents
+      currentContents.sort((a,b) => {
+        return b.id - a.id
+      });
+      return Object.assign({}, state, {
+        contents: currentContents,　
+        selectContent: currentContents[0],
+        idCount: currentContents[0].id
+      });
     case 'VIEW_CONTENT':
+      console.log(action);
       return Object.assign({}, state, {
         selectContent: action.selectContent,
       });
@@ -25,6 +40,7 @@ const contentReducer = (state = initState, action) => {
       currentContents.sort((a,b) => {
         return b.id - a.id
       });
+
       return Object.assign({}, state, {
         contents: currentContents,
         selectContent: emptyNewContent,
@@ -62,6 +78,7 @@ const contentReducer = (state = initState, action) => {
       });
     case 'CHANGE_TITLE':
       //タイトル変更時のみsidebarを再レンダリングしたいので、sliceメソッド適用
+      console.log("change");
       currentContents = currentContents.slice(0)
       state.selectContent.title = action.title;
       return Object.assign({}, state, {

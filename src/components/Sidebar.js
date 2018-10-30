@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Button, Layout, Menu, Icon, Dropdown } from 'antd'
 
-import { viewContent, addContent } from '../store/actions/contentActions'
+import { initialContent , viewContent, addContent } from '../store/actions/contentActions'
 
 import ContentList from './ContentList'
 const { Sider } = Layout;
@@ -11,14 +11,18 @@ const { Sider } = Layout;
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
+    //initialdb用
+    this.props.initialContent()
 
     this.addContent = this.addContent.bind(this);
   }
 
   componentDidMount() {
     //初期のcontent用。
-    let lastNum = this.props.contents.length;
-    this.props.viewContent(this.props.contents[lastNum - 1]);
+    //initialContentを使用したから不要？
+    // let lastNum = this.props.contents.length;
+    // this.props.viewContent(this.props.contents[lastNum - 1]);
+
   }
 
   addContent() {
@@ -58,6 +62,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    initialContent: () => dispatch(initialContent()),
     addContent: () => dispatch(addContent()),
     viewContent: (selectContent) => dispatch(viewContent(selectContent))
   }
