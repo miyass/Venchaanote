@@ -17,16 +17,8 @@ class Sidebar extends React.Component {
     this.addContent = this.addContent.bind(this);
   }
 
-  componentDidMount() {
-    //初期のcontent用。
-    //initialContentを使用したから不要？
-    // let lastNum = this.props.contents.length;
-    // this.props.viewContent(this.props.contents[lastNum - 1]);
-
-  }
-
   addContent() {
-    this.props.addContent()
+    this.props.addContent(Number(this.props.idCount))
   }
 
   viewContent(e) {
@@ -42,12 +34,11 @@ class Sidebar extends React.Component {
           </Menu.Item>
           { this.props.contents.map(con =>
           <Menu.Item key={con.id} onClick={this.viewContent.bind(this, con)} >
-            <ContentList title={con.title} contentId={con.id} />
+            <ContentList title={con.title} contentId={con.id} numberOfContents={this.props.contents.length} />
           </Menu.Item>
 
           )}
         </Menu>
-
       </Sider>
     )
   }
@@ -56,14 +47,15 @@ class Sidebar extends React.Component {
 const mapStateToProps = (state) => {
   return {
     contents: state.content.contents,
-    selectContent: state.content.selectContent
+    selectContent: state.content.selectContent,
+    idCount:　state.content.idCount,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     initialContent: () => dispatch(initialContent()),
-    addContent: () => dispatch(addContent()),
+    addContent: (id) => dispatch(addContent(id)),
     viewContent: (selectContent) => dispatch(viewContent(selectContent))
   }
 }

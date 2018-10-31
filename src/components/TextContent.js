@@ -38,7 +38,7 @@ class TextContent extends React.Component {
     this.setState({
       title: e.target.value
     });
-    this.props.titleChange(e.target.value, false);
+    this.props.titleChange(this.props.selectContent.id, e.target.value, false);
   }
 
   contentChange(editorState) {
@@ -50,15 +50,15 @@ class TextContent extends React.Component {
     markdown = preTexts;
     this.setState({markdown});
     this.setState({editorState});
-    this.props.contentChange(preTexts, false);
+    this.props.contentChange(this.props.selectContent.id, preTexts, false);
   }
 
   titleTypeEnd() {
-    this.props.titleChange(this.state.title, true);
+    this.props.titleChange(this.props.selectContent.id, this.state.title, true);
   }
 
   contentTypeEnd() {
-    this.props.contentChange(this.state.markdown, true);
+    this.props.contentChange(this.props.selectContent.id, this.state.markdown, true);
   }
 
   render() {
@@ -86,8 +86,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    titleChange: (title, saveDBCheck) => dispatch(titleChange(title, saveDBCheck)),
-    contentChange: (content, saveDBCheck) => dispatch(contentChange(content, saveDBCheck))
+    titleChange: (id, title, saveDBCheck) => dispatch(titleChange(id, title, saveDBCheck)),
+    contentChange: (id, content, saveDBCheck) => dispatch(contentChange(id, content, saveDBCheck))
   }
 }
 

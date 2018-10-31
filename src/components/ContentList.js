@@ -11,7 +11,7 @@ class ContentList extends React.Component {
   }
 
   deleteContent() {
-    this.props.deleteContent(this.props.contentId)
+    this.props.deleteContent(this.props.contentId, this.props.numberOfContents)
   }
 
   render() {
@@ -20,23 +20,20 @@ class ContentList extends React.Component {
         <Menu.Item key="delete" onClick={this.deleteContent}>Delete</Menu.Item>
       </Menu>
     );
-
     return(
       <Dropdown overlay={menu} trigger={['contextMenu']}>
         <div style={{width: '100%', height: '100%'}}>
           <p>{this.props.title}</p>
         </div>
       </Dropdown>
-
     )
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteContent: (contentId) => dispatch(deleteContent(contentId))
+    deleteContent: (contentId, numberOfContents) => dispatch(deleteContent(contentId, numberOfContents))
   }
 }
-
 
 export default connect(null, mapDispatchToProps)(ContentList)
