@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Layout, Row, Col, Input } from 'antd'
 const { Content } = Layout;
-import {Editor, EditorState, ContentState} from 'draft-js'
+import {Editor, EditorState, ContentState, Modifier} from 'draft-js'
 import ReactMarkdown from 'react-markdown'
 
 import { titleChange, contentChange } from '../store/actions/contentActions'
@@ -24,6 +24,9 @@ class TextContent extends React.Component {
     this.contentChange = this.contentChange.bind(this);
     this.titleTypeEnd = this.titleTypeEnd.bind(this);
     this.contentTypeEnd = this.contentTypeEnd.bind(this);
+
+    //editor関係 tabキーの実装
+    this.onTab = this.onTab.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,6 +42,22 @@ class TextContent extends React.Component {
       title: e.target.value
     });
     this.props.titleChange(this.props.selectContent.id, e.target.value, false);
+  }
+
+  onTab(e) {
+    e.preventDefault();
+    const tabCharacter = "    ";
+    let currentState = this.state.editorState;
+    let newContentState = Modifier.replaceText(
+      currentState.getCurrentContent(),
+      currentState.getSelection(),
+      tabCharacter
+    );
+    this.setState({
+      editorState: EditorState.push(currentState, newContentState, 'insert-characters')
+    });
+
+
   }
 
   contentChange(editorState) {
@@ -67,7 +86,7 @@ class TextContent extends React.Component {
          <Content style={{ margin: '24px 16px 24px' }}>
            <input type="text" className="titleInputField" placeholder="Title" value={this.state.title} onChange={this.titleChange} onBlur={this.titleTypeEnd} />
            <Col span={12}>
-            <Editor editorState={this.state.editorState} onChange={this.contentChange} onBlur={this.contentTypeEnd} />
+            <Editor editorState={this.state.editorState} onTab={this.onTab} onChange={this.contentChange} onBlur={this.contentTypeEnd} />
           </Col>
           <Col span={12}>
             <ReactMarkdown source={this.state.markdown} />
