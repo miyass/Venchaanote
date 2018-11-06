@@ -2,24 +2,27 @@ import Store from 'electron-store';
 const store = new Store();
 
 export const initialContent = () => {
-  return (dispatch, getState) => {
-    let contentsFromDB = store.get('contents')
-    let idCount = store.get('idCount')
-    //起動時、DBに値がnullの時の処理
-    if (contentsFromDB === undefined) {
-      //idCountがundefinedの時=まだconfig.jsonが作られてない時
-      if(idCount === undefined) {
-        idCount = 0
-      }
-      let maxId = idCount + 1
-      let idString = maxId.toString()
-      let newContent = {id: idString , title: 'sample', content: '# これはsampleContentです。'};
-      store.set('contents.' + maxId , newContent);
-      store.set('idCount', maxId);
-      //Reducer用に再定義
-      let newContentForReducer = { idString: newContent }
+
+  let contentsFromDB = store.get('contents')
+  let idCount = store.get('idCount')
+  //起動時、DBに値がnullの時の処理
+  if (contentsFromDB === undefined) {
+    //idCountがundefinedの時=まだconfig.jsonが作られてない時
+    if(idCount === undefined) {
+      idCount = 0
+    }
+    let maxId = idCount + 1
+    let idString = maxId.toString()
+    let newContent = {id: idString , title: 'sample', content: '# これはsampleContentです。'};
+    store.set('contents.' + maxId , newContent);
+    store.set('idCount', maxId);
+    //Reducer用に再定義
+    let newContentForReducer = { idString: newContent }
+    return (dispatch, getState) => {
       dispatch({ type: 'INITIAL_CONTENT', contents: newContentForReducer, idCount: maxId})
     }
+  }
+  return (dispatch, getState) => {
     dispatch({ type: 'INITIAL_CONTENT', contents: contentsFromDB, idCount: idCount})
   }
 }
