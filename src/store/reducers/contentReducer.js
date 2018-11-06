@@ -1,7 +1,7 @@
 const initState = {
   contents: [],
   selectContent: {},
-  idCount: 1
+  idCount: 0
 }
 
 const contentReducer = (state = initState, action) => {

@@ -5,6 +5,21 @@ export const initialContent = () => {
   return (dispatch, getState) => {
     let contentsFromDB = store.get('contents')
     let idCount = store.get('idCount')
+    //起動時、DBに値がnullの時の処理
+    if (contentsFromDB === undefined) {
+      //idCountがundefinedの時=まだconfig.jsonが作られてない時
+      if(idCount === undefined) {
+        idCount = 0
+      }
+      let maxId = idCount + 1
+      let idString = maxId.toString()
+      let newContent = {id: idString , title: 'sample', content: '# これはsampleContentです。'};
+      store.set('contents.' + maxId , newContent);
+      store.set('idCount', maxId);
+      //Reducer用に再定義
+      let newContentForReducer = { idString: newContent }
+      dispatch({ type: 'INITIAL_CONTENT', contents: newContentForReducer, idCount: maxId})
+    }
     dispatch({ type: 'INITIAL_CONTENT', contents: contentsFromDB, idCount: idCount})
   }
 }
@@ -16,7 +31,6 @@ export const viewContent = (selectContent) => {
 }
 
 export const addContent = (id) => {
-  console.log(id);
   let maxId = id + 1
   let emptyNewContent = {id: maxId.toString(), title: '', content: ''}
   store.set('contents.' + maxId , emptyNewContent);
@@ -34,6 +48,7 @@ export const deleteContent = (contentId, numberOfContents) => {
     let maxId = idCount + 1
     let newSelectContent = {id: maxId.toString() , title: 'sample', content: '# last'};
     store.set('contents.' + maxId , newSelectContent);
+    store.set('idCount', maxId);
     return (dispatch, getState) => {
       dispatch({ type: 'DELETE_LASTCONTENT', newSelectContent: newSelectContent })
     }
