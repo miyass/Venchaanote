@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { Layout, Row, Col, Input } from 'antd'
+import { Layout, Row, Col, Input, Button, Menu, Dropdown } from 'antd'
 const { Content } = Layout;
 import {Editor, EditorState, ContentState, Modifier} from 'draft-js'
 import ReactMarkdown from 'react-markdown'
@@ -17,6 +17,8 @@ class TextContent extends React.Component {
       editorState: EditorState.createWithContent(ContentState.createFromText(this.props.selectContent.content)),
       markdown: this.props.selectContent.content,
       title: this.props.selectContent.title,
+      editorScreenSize: 12,
+      markdownScreenSize: 12
     };
 
     // ライフサイクル外の関数から state を参照するための bind
@@ -44,22 +46,6 @@ class TextContent extends React.Component {
     this.props.titleChange(this.props.selectContent.id, e.target.value, false);
   }
 
-  onTab(e) {
-    e.preventDefault();
-    const tabCharacter = "    ";
-    let currentState = this.state.editorState;
-    let newContentState = Modifier.replaceText(
-      currentState.getCurrentContent(),
-      currentState.getSelection(),
-      tabCharacter
-    );
-    this.setState({
-      editorState: EditorState.push(currentState, newContentState, 'insert-characters')
-    });
-
-
-  }
-
   contentChange(editorState) {
     let contents = editorState.getCurrentContent().getBlockMap()
     let preTexts = ""
@@ -80,15 +66,55 @@ class TextContent extends React.Component {
     this.props.contentChange(this.props.selectContent.id, this.state.markdown, true);
   }
 
+  onTab(e) {
+    e.preventDefault();
+    const tabCharacter = "    ";
+    let currentState = this.state.editorState;
+    let newContentState = Modifier.replaceText(
+      currentState.getCurrentContent(),
+      currentState.getSelection(),
+      tabCharacter
+    );
+    this.setState({
+      editorState: EditorState.push(currentState, newContentState, 'insert-characters')
+    });
+  }
+
+  screenChange(editorScreenSize, markdownScreenSize) {
+    console.log(editorScreenSize, markdownScreenSize);
+    this.setState({
+      editorScreenSize: editorScreenSize,
+      markdownScreenSize: markdownScreenSize
+    });
+  }
+
   render() {
+    const menu = (
+      <Menu>
+        <Menu.Item key="splitScreen" onClick={this.screenChange.bind(this, 12, 12)}>
+          Split Screen
+        </Menu.Item>
+        <Menu.Item key="fullEditScreen" onClick={this.screenChange.bind(this, 24, 0)}>
+          Full Edit Screen
+        </Menu.Item>
+        <Menu.Item key="fullMarkdownScreen" onClick={this.screenChange.bind(this, 0, 24)}>
+          Full Markdown Screen
+        </Menu.Item>
+        <Menu.Divider />
+      </Menu>
+    );
+
     return(
       <Layout style={{ marginLeft: 200, height: '100vh' }}>
-         <Content style={{ margin: '24px 16px 24px' }}>
+        <Dropdown overlay={menu} trigger={['click']}>
+          <Button shape="circle" icon="ellipsis" size="small" style={{ overflow: 'auto', position: 'fixed', top: 30, right: 50 }} />
+        </Dropdown>
+        <Content style={{ margin: '24px 16px 24px' }}>
           <input type="text" className="titleInputField" placeholder="Title" value={this.state.title} onChange={this.titleChange} onBlur={this.titleTypeEnd} />
-          <Col span={12}>
+          <Col span={this.state.editorScreenSize}>
             <Editor editorState={this.state.editorState} onTab={this.onTab} onChange={this.contentChange} onBlur={this.contentTypeEnd} />
           </Col>
-          <Col span={12}>
+          <Col span={this.state.markdownScreenSize}>
             <ReactMarkdown source={this.state.markdown} />
           </Col>
         </Content>

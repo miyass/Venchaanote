@@ -36,7 +36,6 @@ class Sidebar extends React.Component {
           <Menu.Item key={con.id} onClick={this.viewContent.bind(this, con)} >
             <ContentList title={con.title} contentId={con.id} numberOfContents={this.props.contents.length} />
           </Menu.Item>
-
           )}
         </Menu>
       </Sider>
