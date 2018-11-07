@@ -27,7 +27,7 @@ class Sidebar extends React.Component {
 
   render() {
     return (
-      <Sider width={100} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
+      <Sider width={200} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
         <Menu theme="dark" selectedKeys={[this.props.selectContent.id]}>
           <Menu.Item key="plus" onClick={this.addContent}>
             <Icon type="plus-circle" theme="outlined" />

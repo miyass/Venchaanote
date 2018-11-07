@@ -82,10 +82,10 @@ class TextContent extends React.Component {
 
   render() {
     return(
-      <Layout style={{ marginLeft: 100, height: '100vh' }}>
+      <Layout style={{ marginLeft: 200, height: '100vh' }}>
          <Content style={{ margin: '24px 16px 24px' }}>
-           <input type="text" className="titleInputField" placeholder="Title" value={this.state.title} onChange={this.titleChange} onBlur={this.titleTypeEnd} />
-           <Col span={12}>
+          <input type="text" className="titleInputField" placeholder="Title" value={this.state.title} onChange={this.titleChange} onBlur={this.titleTypeEnd} />
+          <Col span={12}>
             <Editor editorState={this.state.editorState} onTab={this.onTab} onChange={this.contentChange} onBlur={this.contentTypeEnd} />
           </Col>
           <Col span={12}>
