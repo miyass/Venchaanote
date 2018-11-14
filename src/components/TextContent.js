@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Layout, Row, Col, Input, Button, Menu, Dropdown } from 'antd'
 const { Content } = Layout;
-import {Editor, EditorState, ContentState, Modifier} from 'draft-js'
-import ReactMarkdown from 'react-markdown'
+import {Editor, EditorState, ContentState, Modifier} from 'draft-js';
+
+import Markdown from './Markdown';
 
 import { titleChange, contentChange } from '../store/actions/contentActions'
 
@@ -115,7 +116,7 @@ class TextContent extends React.Component {
             <Editor editorState={this.state.editorState} onTab={this.onTab} onChange={this.contentChange} onBlur={this.contentTypeEnd} />
           </Col>
           <Col span={this.state.markdownScreenSize}>
-            <ReactMarkdown source={this.state.markdown} />
+            <Markdown markdown={this.state.markdown} />
           </Col>
         </Content>
       </Layout>

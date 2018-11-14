@@ -1,4 +1,4 @@
-import { app, Menu, BrowserWindow } from 'electron';
+import { app, shell, Menu, BrowserWindow } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 
@@ -17,6 +17,12 @@ const createWindow = async () => {
     height: 600,
   });
 
+  mainWindow.webContents.on('new-window', (event, url) => {
+    console.log(event);
+    event.preventDefault();
+    shell.openExternal(url);
+  });
+
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
@@ -25,7 +31,6 @@ const createWindow = async () => {
     await installExtension(REACT_DEVELOPER_TOOLS);
     mainWindow.webContents.openDevTools();
   }
-
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
@@ -40,7 +45,6 @@ const createWindow = async () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   createWindow()
-
   var menu = Menu.buildFromTemplate([
     {
       label: 'Sample',
@@ -66,9 +70,7 @@ app.on('ready', () => {
       ]
     }
   ]);
-Menu.setApplicationMenu(menu);
-
-
+  Menu.setApplicationMenu(menu);
 });
 
 // Quit when all windows are closed.
