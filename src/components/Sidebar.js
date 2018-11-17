@@ -1,62 +1,88 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { connect } from 'react-redux'
-import { Button, Layout, Menu, Icon, Dropdown } from 'antd'
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Layout, Menu, Icon } from 'antd';
+// aliased import
+import { initialContent as actionInitialContent, viewContent as actionViewContent, addContent as actionAddContent } from '../store/actions/contentActions';
+import ContentList from './ContentList';
 
-import { initialContent , viewContent, addContent } from '../store/actions/contentActions'
-
-import ContentList from './ContentList'
 const { Sider } = Layout;
 
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
-    //initialdb用
-    this.props.initialContent()
-
-    this.addContent = this.addContent.bind(this);
+    // initialdb用
+    props.initialContent();
   }
 
   addContent() {
-    this.props.addContent(Number(this.props.idCount))
+    const { idCount, addContent } = this.props;
+    addContent(idCount);
   }
 
-  viewContent(e) {
-    this.props.viewContent(e)
+  viewContent(e, con) {
+    const { viewContent } = this.props;
+    viewContent(con);
   }
 
   render() {
+    const { contents, selectContent } = this.props;
     return (
-      <Sider width={200} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
-        <Menu theme="dark" selectedKeys={[this.props.selectContent.id]}>
-          <Menu.Item key="plus" onClick={this.addContent}>
+      <Sider
+        width={200}
+        style={{
+          overflow: 'auto',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+        }}
+      >
+        <Menu theme="dark" selectedKeys={[selectContent.id]}>
+          <Menu.Item key="plus" onClick={() => this.addContent()}>
             <Icon type="plus-circle" theme="outlined" />
           </Menu.Item>
-          { this.props.contents.map(con =>
-          <Menu.Item key={con.id} onClick={this.viewContent.bind(this, con)} >
-            <ContentList title={con.title} contentId={con.id} numberOfContents={this.props.contents.length} />
-          </Menu.Item>
-          )}
+          {contents.map(con => (
+            <Menu.Item key={con.id} onClick={e => this.viewContent(e, con)}>
+              <ContentList
+                title={con.title}
+                contentId={con.id}
+                numberOfContents={contents.length}
+              />
+            </Menu.Item>
+          ))}
         </Menu>
       </Sider>
-    )
+    );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    contents: state.content.contents,
-    selectContent: state.content.selectContent,
-    idCount:　state.content.idCount,
-  }
-}
+const mapStateToProps = state => ({
+  contents: state.content.contents,
+  selectContent: state.content.selectContent,
+  idCount: state.content.idCount,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    initialContent: () => dispatch(initialContent()),
-    addContent: (id) => dispatch(addContent(id)),
-    viewContent: (selectContent) => dispatch(viewContent(selectContent))
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  initialContent: () => dispatch(actionInitialContent()),
+  addContent: id => dispatch(actionAddContent(id)),
+  viewContent: selectContent => dispatch(actionViewContent(selectContent)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
+Sidebar.propTypes = {
+  contents: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+  })).isRequired,
+  selectContent: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    content: PropTypes.string,
+  }).isRequired,
+  idCount: PropTypes.number.isRequired,
+  initialContent: PropTypes.func.isRequired,
+  addContent: PropTypes.func.isRequired,
+  viewContent: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

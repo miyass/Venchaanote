@@ -1,15 +1,13 @@
-import React from 'react'
+import React from 'react';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import { Layout } from 'antd';
 
-import { createStore, applyMiddleware } from 'redux'
-import { Provider } from 'react-redux'
-import thunk from 'redux-thunk'
-import rootReducer from './store/reducers/rootReducer'
+import rootReducer from './store/reducers/rootReducer';
+import Sidebar from './components/Sidebar';
+import TextContent from './components/TextContent';
 
-import { Layout, Menu, Icon } from 'antd'
-import Sidebar from './components/Sidebar'
-import TextContent from './components/TextContent'
-
-const { Header } = Layout;
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default class App extends React.Component {

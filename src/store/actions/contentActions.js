@@ -2,7 +2,6 @@ import Store from 'electron-store';
 const store = new Store();
 
 export const initialContent = () => {
-
   let contentsFromDB = store.get('contents')
   let idCount = store.get('idCount')
   //起動時、DBに値がnullの時の処理

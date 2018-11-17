@@ -36,7 +36,7 @@ const contentReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         contents: currentContents,
         selectContent: action.emptyNewContent,
-        idCount: action.emptyNewContent.id
+        idCount: Number(action.emptyNewContent.id)
       });
     case 'DELETE_LASTCONTENT':
       currentContents = [action.newSelectContent];
