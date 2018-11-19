@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Layout, Menu, Icon } from 'antd';
 // aliased import
-import { initialContent as actionInitialContent, viewContent as actionViewContent, addContent as actionAddContent } from '../store/actions/contentActions';
+import {
+  initialContent as actionInitialContent,
+  viewContent as actionViewContent,
+  addContent as actionAddContent,
+} from '../store/actions/contentActions';
 import ContentList from './ContentList';
 
 const { Sider } = Layout;

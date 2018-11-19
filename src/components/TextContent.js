@@ -1,140 +1,192 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { connect } from 'react-redux'
-import { Layout, Row, Col, Input, Button, Menu, Dropdown } from 'antd'
-const { Content } = Layout;
-import {Editor, EditorState, ContentState, Modifier} from 'draft-js';
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {
+  Layout, Col, Button, Menu, Dropdown,
+} from 'antd';
+import {
+  Editor, EditorState, ContentState, Modifier,
+} from 'draft-js';
 
 import Markdown from './Markdown';
 
-import { titleChange, contentChange } from '../store/actions/contentActions'
+import {
+  titleChange as actionTitleChange,
+  contentChange as actionContentChange,
+} from '../store/actions/contentActions';
 
-let markdown = ""
+const { Content } = Layout;
+let markdownText = '';
 
 class TextContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createWithContent(ContentState.createFromText(this.props.selectContent.content)),
-      markdown: this.props.selectContent.content,
-      title: this.props.selectContent.title,
+      editorState: EditorState.createWithContent(
+        ContentState.createFromText(props.selectContent.content),
+      ),
+      markdown: props.selectContent.content,
+      title: props.selectContent.title,
       editorScreenSize: 12,
-      markdownScreenSize: 12
+      markdownScreenSize: 12,
     };
 
     // ライフサイクル外の関数から state を参照するための bind
-    this.titleChange = this.titleChange.bind(this);
     this.contentChange = this.contentChange.bind(this);
-    this.titleTypeEnd = this.titleTypeEnd.bind(this);
     this.contentTypeEnd = this.contentTypeEnd.bind(this);
 
-    //editor関係 tabキーの実装
+    // editor関係 tabキーの実装
     this.onTab = this.onTab.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       title: nextProps.selectContent.title,
-      editorState: EditorState.createWithContent(ContentState.createFromText(nextProps.selectContent.content)),
-      markdown: nextProps.selectContent.content
+      editorState: EditorState.createWithContent(
+        ContentState.createFromText(nextProps.selectContent.content),
+      ),
+      markdown: nextProps.selectContent.content,
+    });
+  }
+
+  onTab(e) {
+    const { editorState } = this.state;
+    e.preventDefault();
+    const tabCharacter = '    ';
+    const currentState = editorState;
+    const newContentState = Modifier.replaceText(
+      currentState.getCurrentContent(),
+      currentState.getSelection(),
+      tabCharacter,
+    );
+    this.setState({
+      editorState: EditorState.push(currentState, newContentState, 'insert-characters'),
     });
   }
 
   titleChange(e) {
+    const { selectContent, titleChange } = this.props;
     this.setState({
-      title: e.target.value
+      title: e.target.value,
     });
-    this.props.titleChange(this.props.selectContent.id, e.target.value, false);
+    titleChange(selectContent.id, e.target.value, false);
   }
 
   contentChange(editorState) {
-    let contents = editorState.getCurrentContent().getBlockMap()
-    let preTexts = ""
-    contents.map((content) => {
-      preTexts += content.getText() + "\n";
+    const { selectContent, contentChange } = this.props;
+    const contents = editorState.getCurrentContent().getBlockMap();
+    let preTexts = '';
+    contents.map(content => preTexts += `${content.getText()}\n`);
+    markdownText = preTexts;
+    this.setState({
+      markdown: markdownText,
     });
-    markdown = preTexts;
-    this.setState({markdown});
-    this.setState({editorState});
-    this.props.contentChange(this.props.selectContent.id, preTexts, false);
+    this.setState({ editorState });
+    contentChange(selectContent.id, preTexts, false);
   }
 
   titleTypeEnd() {
-    this.props.titleChange(this.props.selectContent.id, this.state.title, true);
+    const { selectContent, titleChange } = this.props;
+    const { title } = this.state;
+    titleChange(selectContent.id, title, true);
   }
 
   contentTypeEnd() {
-    this.props.contentChange(this.props.selectContent.id, this.state.markdown, true);
-  }
-
-  onTab(e) {
-    e.preventDefault();
-    const tabCharacter = "    ";
-    let currentState = this.state.editorState;
-    let newContentState = Modifier.replaceText(
-      currentState.getCurrentContent(),
-      currentState.getSelection(),
-      tabCharacter
-    );
-    this.setState({
-      editorState: EditorState.push(currentState, newContentState, 'insert-characters')
-    });
+    const { selectContent, contentChange } = this.props;
+    const { markdown } = this.state;
+    contentChange(selectContent.id, markdown, true);
   }
 
   screenChange(editorScreenSize, markdownScreenSize) {
-    console.log(editorScreenSize, markdownScreenSize);
     this.setState({
-      editorScreenSize: editorScreenSize,
-      markdownScreenSize: markdownScreenSize
+      editorScreenSize,
+      markdownScreenSize,
     });
   }
 
   render() {
+    const {
+      editorState, markdown, title, editorScreenSize, markdownScreenSize,
+    } = this.state;
     const menu = (
       <Menu>
-        <Menu.Item key="splitScreen" onClick={this.screenChange.bind(this, 12, 12)}>
+        <Menu.Item key="splitScreen" onClick={() => this.screenChange(12, 12)}>
           Split Screen
         </Menu.Item>
-        <Menu.Item key="fullEditScreen" onClick={this.screenChange.bind(this, 24, 0)}>
+        <Menu.Item key="fullEditScreen" onClick={() => this.screenChange(24, 0)}>
           Full Edit Screen
         </Menu.Item>
-        <Menu.Item key="fullMarkdownScreen" onClick={this.screenChange.bind(this, 0, 24)}>
+        <Menu.Item key="fullMarkdownScreen" onClick={() => this.screenChange(0, 24)}>
           Full Markdown Screen
         </Menu.Item>
         <Menu.Divider />
       </Menu>
     );
 
-    return(
+    return (
       <Layout style={{ marginLeft: 200, height: '100vh' }}>
         <Dropdown overlay={menu} trigger={['click']}>
-          <Button shape="circle" icon="ellipsis" size="small" style={{ overflow: 'auto', position: 'fixed', top: 30, right: 50 }} />
+          <Button
+            shape="circle"
+            icon="ellipsis"
+            size="small"
+            style={{
+              overflow: 'auto',
+              position: 'fixed',
+              top: 30,
+              right: 50,
+            }}
+          />
         </Dropdown>
         <Content style={{ margin: '24px 16px 24px' }}>
-          <input type="text" className="titleInputField" placeholder="Title" value={this.state.title} onChange={this.titleChange} onBlur={this.titleTypeEnd} />
-          <Col span={this.state.editorScreenSize}>
-            <Editor editorState={this.state.editorState} onTab={this.onTab} onChange={this.contentChange} onBlur={this.contentTypeEnd} />
+          <input
+            type="text"
+            className="titleInputField"
+            placeholder="Title"
+            value={title}
+            onChange={e => this.titleChange(e)}
+            onBlur={() => this.titleTypeEnd()}
+          />
+          <Col span={editorScreenSize}>
+            <Editor
+              editorState={editorState}
+              onTab={this.onTab}
+              onChange={this.contentChange}
+              onBlur={this.contentTypeEnd}
+            />
           </Col>
-          <Col span={this.state.markdownScreenSize}>
-            <Markdown markdown={this.state.markdown} />
+          <Col span={markdownScreenSize}>
+            <Markdown
+              markdown={markdown}
+            />
           </Col>
         </Content>
       </Layout>
-    )
+    );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    selectContent: state.content.selectContent,
-  }
-}
+const mapStateToProps = state => ({
+  selectContent: state.content.selectContent,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    titleChange: (id, title, saveDBCheck) => dispatch(titleChange(id, title, saveDBCheck)),
-    contentChange: (id, content, saveDBCheck) => dispatch(contentChange(id, content, saveDBCheck))
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  titleChange: (id, title, saveDBCheck) => (
+    dispatch(actionTitleChange(id, title, saveDBCheck))
+  ),
+  contentChange: (id, content, saveDBCheck) => (
+    dispatch(actionContentChange(id, content, saveDBCheck))
+  ),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextContent)
+TextContent.propTypes = {
+  selectContent: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    content: PropTypes.string,
+  }).isRequired,
+  titleChange: PropTypes.func.isRequired,
+  contentChange: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TextContent);
