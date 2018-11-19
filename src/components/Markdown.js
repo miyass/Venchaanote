@@ -1,29 +1,29 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import marked from 'marked';
 import hljs from 'highlight.js';
 
 class Markdown extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidUpdate() {
     marked.setOptions({
-        highlight: function(code, lang) {
-          return hljs.highlightAuto(code, [lang]).value;
-        }
+      highlight(code, lang) {
+        return hljs.highlightAuto(code, [lang]).value;
+      },
     });
   }
 
-  render () {
-    let html = marked(this.props.markdown);
+  render() {
+    const { markdown } = this.props;
+    const html = marked(markdown);
     return (
-      <div dangerouslySetInnerHTML={{__html: html}}></div>
+      <div dangerouslySetInnerHTML={{ __html: html }} />
     );
   }
-
 }
 
-export default connect()(Markdown)
+Markdown.propTypes = {
+  markdown: PropTypes.string.isRequired,
+};
+
+export default connect()(Markdown);
