@@ -50,6 +50,9 @@ app.on('ready', () => {
       label: 'Sample',
       submenu: [
         {role: 'about'},
+        {role: 'hide'},
+        {role: 'hideothers'},
+        {role: 'unhide'},
         {role: 'quit'},
       ]
     },
@@ -68,7 +71,15 @@ app.on('ready', () => {
         {role: 'paste'},
         {role: 'selectall'},
       ]
-    }
+    },
+    {
+   role: 'window',
+   submenu: [
+     {role: 'minimize'},
+     {role: 'close'},
+     {role: 'reload'},
+   ]
+ },
   ]);
   Menu.setApplicationMenu(menu);
 });

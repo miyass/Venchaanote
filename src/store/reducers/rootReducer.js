@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux'
-import contentReducer from './contentReducer'
+import { combineReducers } from 'redux';
+import contentReducer from './contentReducer';
 
 const rootReducer = combineReducers({
-  content: contentReducer
+  content: contentReducer,
 });
 
-export default rootReducer
+export default rootReducer;
