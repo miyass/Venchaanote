@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Menu, Dropdown } from 'antd';
-import { deleteContent as actionDeleteContent } from '../store/actions/contentActions';
+import { deleteContent as actionDeleteContent } from '../../store/actions/contentActions';
 
 class ContentList extends React.Component {
   deleteContent() {

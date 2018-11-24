@@ -2,12 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Layout, Menu, Icon } from 'antd';
+
+import { NavLink } from 'react-router-dom';
+
 // aliased import
 import {
   initialContent as actionInitialContent,
   viewContent as actionViewContent,
   addContent as actionAddContent,
-} from '../store/actions/contentActions';
+} from '../../store/actions/contentActions';
 import ContentList from './ContentList';
 
 const { Sider } = Layout;
@@ -44,6 +47,9 @@ class Sidebar extends React.Component {
         <Menu theme="dark" selectedKeys={[selectContent.id]}>
           <Menu.Item key="plus" onClick={() => this.addContent()}>
             <Icon type="plus-circle" theme="outlined" />
+          </Menu.Item>
+          <Menu.Item key="back">
+            <NavLink to="/dashboard">aaa</NavLink>
           </Menu.Item>
           {contents.map(con => (
             <Menu.Item key={con.id} onClick={e => this.viewContent(e, con)}>

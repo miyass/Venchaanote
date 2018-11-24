@@ -13,7 +13,7 @@ import Markdown from './Markdown';
 import {
   titleChange as actionTitleChange,
   contentChange as actionContentChange,
-} from '../store/actions/contentActions';
+} from '../../store/actions/contentActions';
 
 const { Content } = Layout;
 let markdownText = '';
