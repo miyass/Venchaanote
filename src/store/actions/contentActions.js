@@ -33,25 +33,25 @@ export const viewContent = (selectContent) => {
   };
 };
 
-export const addContent = (id) => {
+export const addContent = (id, notebookId) => {
   const maxId = id + 1;
   const emptyNewContent = { id: maxId.toString(), title: '', content: '' };
-  store.set(`contents.${maxId}`, emptyNewContent);
-  store.set('idCount', maxId);
+  store.set(`contents.${notebookId}.contentList.${maxId}`, emptyNewContent);
+  store.set(`contents.${notebookId}.idCount`, maxId);
   return (dispatch) => {
     dispatch({ type: 'ADD_CONTENT', emptyNewContent });
   };
 };
 
-export const deleteContent = (contentId, numberOfContents) => {
-  store.delete(`contents.${contentId}`);
+export const deleteContent = (contentId, numberOfContents, notebookId) => {
+  store.delete(`contents.${notebookId}.contentList.${contentId}`);
 
   if (numberOfContents === 1) {
-    const idCount = store.get('idCount');
+    const idCount = store.get(`contents.${notebookId}.idCount`);
     const maxId = idCount + 1;
     const newSelectContent = { id: maxId.toString(), title: 'sample', content: '# last' };
-    store.set(`contents.${maxId}`, newSelectContent);
-    store.set('idCount', maxId);
+    store.set(`contents.${notebookId}.contentList.${maxId}`, newSelectContent);
+    store.set(`contents.${notebookId}.idCount`, maxId);
     return (dispatch) => {
       dispatch({ type: 'DELETE_LASTCONTENT', newSelectContent });
     };
@@ -62,18 +62,18 @@ export const deleteContent = (contentId, numberOfContents) => {
   };
 };
 
-export const titleChange = (id, title, saveDBCheck) => {
+export const titleChange = (id, notebookId, title, saveDBCheck) => {
   if (saveDBCheck === true) {
-    store.set(`contents.${id}.title`, title);
+    store.set(`contents.${notebookId}.contentList.${id}.title`, title);
   }
   return (dispatch) => {
     dispatch({ type: 'CHANGE_TITLE', title });
   };
 };
 
-export const contentChange = (id, content, saveDBCheck) => {
+export const contentChange = (id, notebookId, content, saveDBCheck) => {
   if (saveDBCheck === true) {
-    store.set(`contents.${id}.content`, content);
+    store.set(`contents.${notebookId}.contentList.${id}.content`, content);
   }
   return (dispatch) => {
     dispatch({ type: 'CHANGE_CONTENT', content });

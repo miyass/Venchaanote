@@ -65,15 +65,15 @@ class TextContent extends React.Component {
   }
 
   titleChange(e) {
-    const { selectContent, titleChange } = this.props;
+    const { selectContent, notebookId, titleChange } = this.props;
     this.setState({
       title: e.target.value,
     });
-    titleChange(selectContent.id, e.target.value, false);
+    titleChange(selectContent.id, notebookId, e.target.value, false);
   }
 
   contentChange(editorState) {
-    const { selectContent, contentChange } = this.props;
+    const { selectContent, notebookId, contentChange } = this.props;
     const contents = editorState.getCurrentContent().getBlockMap();
     let preTexts = '';
     contents.map(content => preTexts += `${content.getText()}\n`);
@@ -82,19 +82,19 @@ class TextContent extends React.Component {
       markdown: markdownText,
     });
     this.setState({ editorState });
-    contentChange(selectContent.id, preTexts, false);
+    contentChange(selectContent.id, notebookId, preTexts, false);
   }
 
   titleTypeEnd() {
-    const { selectContent, titleChange } = this.props;
+    const { selectContent, notebookId, titleChange } = this.props;
     const { title } = this.state;
-    titleChange(selectContent.id, title, true);
+    titleChange(selectContent.id, notebookId, title, true);
   }
 
   contentTypeEnd() {
-    const { selectContent, contentChange } = this.props;
+    const { selectContent, notebookId, contentChange } = this.props;
     const { markdown } = this.state;
-    contentChange(selectContent.id, markdown, true);
+    contentChange(selectContent.id, notebookId, markdown, true);
   }
 
   screenChange(editorScreenSize, markdownScreenSize) {
@@ -168,14 +168,15 @@ class TextContent extends React.Component {
 
 const mapStateToProps = state => ({
   selectContent: state.content.selectContent,
+  notebookId: state.content.notebookId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  titleChange: (id, title, saveDBCheck) => (
-    dispatch(actionTitleChange(id, title, saveDBCheck))
+  titleChange: (id, notebookId, title, saveDBCheck) => (
+    dispatch(actionTitleChange(id, notebookId, title, saveDBCheck))
   ),
-  contentChange: (id, content, saveDBCheck) => (
-    dispatch(actionContentChange(id, content, saveDBCheck))
+  contentChange: (id, notebookId, content, saveDBCheck) => (
+    dispatch(actionContentChange(id, notebookId, content, saveDBCheck))
   ),
 });
 
@@ -185,6 +186,7 @@ TextContent.propTypes = {
     title: PropTypes.string,
     content: PropTypes.string,
   }).isRequired,
+  notebookId: PropTypes.number.isRequired,
   titleChange: PropTypes.func.isRequired,
   contentChange: PropTypes.func.isRequired,
 };

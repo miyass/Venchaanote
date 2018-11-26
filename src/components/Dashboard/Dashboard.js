@@ -23,7 +23,7 @@ class Dashboard extends React.Component {
           <DashboardHeader />
           <Row  style={{ marginTop: '50px' }}>
             {notebooks.map(notebook => (
-              <NotebookList key={notebook.id} title={notebook.title} />
+              <NotebookList key={notebook.id} title={notebook.title} notebookId={notebook.id} />
             ))}
           </Row>
         </Layout>

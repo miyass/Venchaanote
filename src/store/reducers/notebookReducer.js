@@ -14,7 +14,7 @@ const notebookReducer = (state = initState, action) => {
       currentNotebooks.sort((a, b) => b.id - a.id);
       return Object.assign({}, state, {
         notebooks: currentNotebooks,
-        notebookIdCount: action.notebookIdCount
+        notebookIdCount: Number(action.notebookIdCount),
       });
     }
     case 'ADD_NOTEBOOK': {

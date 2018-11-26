@@ -12,16 +12,16 @@ class NotebookList extends React.Component {
   }
 
   selectNotebook() {
-    const { id } = this.props;
-    selectNotebook(id);
+    const { notebookId, selectNotebook } = this.props;
+    selectNotebook(notebookId);
   }
 
   render() {
     const { title } = this.props;
     return (
-      <NavLink to="/note" onClick={() => this.selectNotebook()}>
+      <NavLink to='/note'>
         <Col xs={24} sm={18} md={12} lg={12} xl={6} style={{ margin: '30px', backgroundColor: '#fcfcfc' }}>
-          <Card hoverable title={title} bordered={false} style={{ boxShadow: '0 2px 5px rgba(0,0,0,0.26)' }}>
+          <Card hoverable title={title} bordered={false} style={{ boxShadow: '0 2px 5px rgba(0,0,0,0.26)' }} onClick={() => this.selectNotebook()}>
             <p>Test</p>
             <p>content</p>
           </Card>
@@ -35,4 +35,5 @@ const mapDispatchToProps = dispatch => ({
   selectNotebook: (id) => dispatch(actionSelectNotebook(id)),
 });
 
-export default NotebookList;
+
+export default connect(null, mapDispatchToProps)(NotebookList);

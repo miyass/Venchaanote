@@ -19,12 +19,12 @@ class Sidebar extends React.Component {
   constructor(props) {
     super(props);
     // initialdb用
-    props.initialContent();
+    // props.initialContent();
   }
 
   addContent() {
-    const { idCount, addContent } = this.props;
-    addContent(idCount);
+    const { idCount, addContent, notebookId } = this.props;
+    addContent(idCount, notebookId);
   }
 
   viewContent(e, con) {
@@ -33,7 +33,7 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    const { contents, selectContent } = this.props;
+    const { contents, selectContent, notebookId } = this.props;
     return (
       <Sider
         width={200}
@@ -57,6 +57,7 @@ class Sidebar extends React.Component {
                 title={con.title}
                 contentId={con.id}
                 numberOfContents={contents.length}
+                notebookId={notebookId}
               />
             </Menu.Item>
           ))}
@@ -70,11 +71,12 @@ const mapStateToProps = state => ({
   contents: state.content.contents,
   selectContent: state.content.selectContent,
   idCount: state.content.idCount,
+  notebookId: state.content.notebookId,
 });
 
 const mapDispatchToProps = dispatch => ({
   initialContent: () => dispatch(actionInitialContent()),
-  addContent: id => dispatch(actionAddContent(id)),
+  addContent: (id, notebookId) => dispatch(actionAddContent(id, notebookId)),
   viewContent: selectContent => dispatch(actionViewContent(selectContent)),
 });
 

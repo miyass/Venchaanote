@@ -6,8 +6,8 @@ import { deleteContent as actionDeleteContent } from '../../store/actions/conten
 
 class ContentList extends React.Component {
   deleteContent() {
-    const { deleteContent, contentId, numberOfContents } = this.props;
-    deleteContent(contentId, numberOfContents);
+    const { deleteContent, contentId, numberOfContents, notebookId } = this.props;
+    deleteContent(contentId, numberOfContents, notebookId);
   }
 
   render() {
@@ -33,8 +33,8 @@ class ContentList extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  deleteContent: (contentId, numberOfContents) => (
-    dispatch(actionDeleteContent(contentId, numberOfContents))
+  deleteContent: (contentId, numberOfContents, notebookId) => (
+    dispatch(actionDeleteContent(contentId, numberOfContents, notebookId))
   ),
 });
 

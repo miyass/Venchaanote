@@ -2,6 +2,7 @@ const initState = {
   contents: [],
   selectContent: {},
   idCount: 0,
+  notebookId: 0
 };
 
 const contentReducer = (state = initState, action) => {
@@ -9,7 +10,6 @@ const contentReducer = (state = initState, action) => {
   let currentContents = state.contents;
   switch (action.type) {
     case 'INITIAL_CONTENT': {
-      console.log("INITIAL_CONTENT");
       const initialContents = [];
       for (const key in action.contents) {
         initialContents.push(action.contents[key]);
@@ -20,6 +20,7 @@ const contentReducer = (state = initState, action) => {
         contents: currentContents,
         selectContent: currentContents[0],
         idCount: action.idCount,
+        notebookId: action.notebookId,
       });
     }
     case 'VIEW_CONTENT': {
@@ -45,7 +46,7 @@ const contentReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         contents: currentContents,
         selectContent: action.newSelectContent,
-        idCount: action.newSelectContent.id,
+        idCount: Number(action.newSelectContent.id),
       });
     }
     case 'DELETE_CONTENT': {
