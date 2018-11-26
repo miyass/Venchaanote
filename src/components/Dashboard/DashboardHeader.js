@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Layout, Row, Button } from 'antd';
-
 import {
   addNotebook as actionAddNotebook,
 } from '../../store/actions/notebookActions';
@@ -12,7 +11,6 @@ class DashboardHeader extends React.Component {
 
   addNotebook() {
     const { notebookId, addNotebook } = this.props;
-    console.log(notebookId);
     addNotebook(notebookId);
   }
 
@@ -26,7 +24,7 @@ class DashboardHeader extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  notebookId: state.notebook.notebookId,
+  notebookId: state.notebook.notebookIdCount
 });
 
 const mapDispatchToProps = dispatch => ({

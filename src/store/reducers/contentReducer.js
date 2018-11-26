@@ -9,6 +9,7 @@ const contentReducer = (state = initState, action) => {
   let currentContents = state.contents;
   switch (action.type) {
     case 'INITIAL_CONTENT': {
+      console.log("INITIAL_CONTENT");
       const initialContents = [];
       for (const key in action.contents) {
         initialContents.push(action.contents[key]);
@@ -22,11 +23,13 @@ const contentReducer = (state = initState, action) => {
       });
     }
     case 'VIEW_CONTENT': {
+      console.log("VIEW_CONTENT");
       return Object.assign({}, state, {
         selectContent: action.selectContent,
       });
     }
     case 'ADD_CONTENT': {
+      console.log("ADD_CONTENT");
       currentContents = currentContents.slice(0);
       currentContents.push(action.emptyNewContent);
       currentContents.sort((a, b) => b.id - a.id);
@@ -37,6 +40,7 @@ const contentReducer = (state = initState, action) => {
       });
     }
     case 'DELETE_LASTCONTENT': {
+      console.log("DELETE_LASTCONTENT");
       currentContents = [action.newSelectContent];
       return Object.assign({}, state, {
         contents: currentContents,
@@ -45,6 +49,7 @@ const contentReducer = (state = initState, action) => {
       });
     }
     case 'DELETE_CONTENT': {
+      console.log("DELETE_CONTENT");
       let newSelectContent = state.selectContent;
       let selectContentOrder = currentContents.indexOf(state.selectContent);
       // セレクトしてるやつと削除するやつが一致しているときの処理
@@ -63,6 +68,7 @@ const contentReducer = (state = initState, action) => {
       });
     }
     case 'CHANGE_TITLE': {
+      console.log("CHANGE_TITLE");
       // タイトル変更時のみsidebarを再レンダリングしたいので、sliceメソッド適用
       currentContents = currentContents.slice(0);
       state.selectContent.title = action.title;
@@ -71,6 +77,7 @@ const contentReducer = (state = initState, action) => {
       });
     }
     case 'CHANGE_CONTENT': {
+      console.log("CHANGE_CONTENT");
       state.selectContent.content = action.content;
       return Object.assign({}, state, {
         contents: currentContents,
