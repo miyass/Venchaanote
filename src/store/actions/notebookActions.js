@@ -23,7 +23,6 @@ export const initializeNotebook = () => {
 }
 
 export const selectNotebook = (id) => {
-  console.log(id);
   const contentList = store.get(`contents.${id}.contentList`);
   const idCount = store.get(`contents.${id}.idCount`);
   return (dispatch) => {
@@ -43,4 +42,12 @@ export const addNotebook = (id) => {
   return (dispatch) => {
     dispatch({ type: 'ADD_NOTEBOOK', emptyNewNotebook });
   };
+}
+
+export const deleteNotebook = (id) => {
+  store.delete(`notebooks.notebookList.${id}`);
+  store.delete(`contents.${id}`);
+  return (dispatch) => {
+    dispatch({ type: 'DELETE_NOTEBOOK', notebookId: id });
+  }
 }

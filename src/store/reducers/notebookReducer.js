@@ -26,8 +26,14 @@ const notebookReducer = (state = initState, action) => {
         notebookIdCount: Number(action.emptyNewNotebook.id),
       });
     }
+    case 'DELETE_NOTEBOOK': {
+      const newNotebooks = currentNotebooks.filter(notebook => !(notebook.id === action.notebookId));
+      return Object.assign({}, state, {
+        notebooks: newNotebooks,
+      });
+    }
+
     case 'VIEW_NOTEBOOK': {
-      console.log("notebookReducerです。");
       return Object.assign({}, state, {
         notebooks: state.notebooks,
       });
