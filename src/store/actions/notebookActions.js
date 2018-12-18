@@ -51,3 +51,7 @@ export const deleteNotebook = (id) => {
     dispatch({ type: 'DELETE_NOTEBOOK', notebookId: id });
   }
 }
+
+export const changeNotebookTitle = ( id, title ) => {
+  console.log("aaaaaa");
+}

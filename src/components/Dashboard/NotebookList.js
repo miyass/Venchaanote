@@ -1,15 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Col, Card, Dropdown, Menu } from 'antd';
+import { Col, Card, Dropdown, Menu, Button, Modal } from 'antd';
 import { NavLink } from 'react-router-dom';
 import {
   selectNotebook as actionSelectNotebook,
   deleteNotebook as actionDeleteNotebook,
+  changeNotebookTitle as actionChangeNotebookTitle
 } from '../../store/actions/notebookActions';
 
 class NotebookList extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      modalVisible: false,
+      title: this.props.title
+    }
   }
 
   deleteNotebook() {
@@ -22,22 +27,67 @@ class NotebookList extends React.Component {
     selectNotebook(notebookId);
   }
 
+  monitorTitle(e) {
+    this.setState({
+      title: e.target.value,
+    });
+  }
+
+  configureNotebook() {
+    this.setState({
+      modalVisible: true
+    });
+  }
+
+  configureNotebookDone() {
+    const { title } = this.state
+    this.setState({
+      modalVisible: false,
+    });
+  }
+
+  configureNotebookCancel() {
+    this.setState({
+      modalVisible: false,
+    });
+  }
+
   render() {
-    const { title } = this.props;
+    const { title } = this.state;
     const menu = (
       <Menu>
         <Menu.Item key='delete' onClick={() => this.deleteNotebook()}>Delete</Menu.Item>
+        <Menu.Item key='configure' onClick={() => this.configureNotebook()}>Rename</Menu.Item>
       </Menu>
     );
     return (
       <Dropdown overlay={menu} trigger={['contextMenu']}>
-        <Col xs={24} sm={18} md={12} lg={12} xl={6} style={{ margin: '30px', backgroundColor: '#fcfcfc' }}>
+        <Col xs={24} sm={10} md={10} lg={6} xl={6} style={{ margin: '30px', backgroundColor: '#fcfcfc' }}>
           <NavLink to='/note'>
-            <Card hoverable title={title} bordered={false} style={{ boxShadow: '0 2px 5px rgba(0,0,0,0.26)' }} onClick={() => this.selectNotebook()}>
-              <p>Test</p>
+            <Card
+              hoverable
+              title={title}
+              bordered={false}
+              style={{ boxShadow: '0 2px 5px rgba(0,0,0,0.26)' }}
+              onClick={() => this.selectNotebook()}
+            >
               <p>content</p>
             </Card>
           </NavLink>
+          <Modal
+            title="Title"
+            visible={this.state.modalVisible}
+            onOk={() => this.configureNotebookDone()}
+            onCancel={() => this.configureNotebookCancel()}
+          >
+            <input
+              type="text"
+              className="titleInputField"
+              placeholder="Please enter a title..."
+              value={title}
+              onChange={(e) => this.monitorTitle(e)}
+            />
+          </Modal>
         </Col>
       </Dropdown>
     );
@@ -47,6 +97,7 @@ class NotebookList extends React.Component {
 const mapDispatchToProps = dispatch => ({
   selectNotebook: (id) => dispatch(actionSelectNotebook(id)),
   deleteNotebook: (id) => dispatch(actionDeleteNotebook(id)),
+
 });
 
 
