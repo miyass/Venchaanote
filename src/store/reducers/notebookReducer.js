@@ -32,10 +32,19 @@ const notebookReducer = (state = initState, action) => {
         notebooks: newNotebooks,
       });
     }
-
     case 'VIEW_NOTEBOOK': {
       return Object.assign({}, state, {
         notebooks: state.notebooks,
+      });
+    }
+    case 'CHANGE_NOTEBOOK_TITLE': {
+      currentNotebooks.map((value) => {
+        if(value.id === action.notebookId) {
+          value.title = action.title;
+        }
+      });
+      return Object.assign({}, state, {
+        notebooks: currentNotebooks,
       });
     }
     default: {

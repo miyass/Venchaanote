@@ -49,9 +49,12 @@ export const deleteNotebook = (id) => {
   store.delete(`contents.${id}`);
   return (dispatch) => {
     dispatch({ type: 'DELETE_NOTEBOOK', notebookId: id });
-  }
+  };
 }
 
-export const changeNotebookTitle = ( id, title ) => {
-  console.log("aaaaaa");
+export const changeNotebookTitle = (id, title) => {
+  store.set(`notebooks.notebookList.${id}.title`, title);
+  return (dispatch) => {
+    dispatch({ type: 'CHANGE_NOTEBOOK_TITLE', notebookId: id, title: title });
+  };
 }

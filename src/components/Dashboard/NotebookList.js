@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import {
   selectNotebook as actionSelectNotebook,
   deleteNotebook as actionDeleteNotebook,
-  changeNotebookTitle as actionChangeNotebookTitle
+  changeNotebookTitle as actionChangeNotebookTitle,
 } from '../../store/actions/notebookActions';
 
 class NotebookList extends React.Component {
@@ -40,7 +40,9 @@ class NotebookList extends React.Component {
   }
 
   configureNotebookDone() {
-    const { title } = this.state
+    const { notebookId, changeNotebookTitle } = this.props;
+    const { title } = this.state;
+    changeNotebookTitle(notebookId, title);
     this.setState({
       modalVisible: false,
     });
@@ -97,7 +99,7 @@ class NotebookList extends React.Component {
 const mapDispatchToProps = dispatch => ({
   selectNotebook: (id) => dispatch(actionSelectNotebook(id)),
   deleteNotebook: (id) => dispatch(actionDeleteNotebook(id)),
-
+  changeNotebookTitle: (id, title) => dispatch(actionChangeNotebookTitle(id, title)),
 });
 
 
