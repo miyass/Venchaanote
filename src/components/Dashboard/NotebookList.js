@@ -13,7 +13,8 @@ class NotebookList extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
-      title: this.props.title
+      title: this.props.title,
+      inputFieldTitle: 'test'
     }
   }
 
@@ -29,21 +30,24 @@ class NotebookList extends React.Component {
 
   monitorTitle(e) {
     this.setState({
-      title: e.target.value,
+      inputFieldTitle: e.target.value,
     });
   }
 
   configureNotebook() {
+    const { title, inputFieldTitle } = this.state;
     this.setState({
-      modalVisible: true
+      modalVisible: true,
+      inputFieldTitle: title
     });
   }
 
   configureNotebookDone() {
     const { notebookId, changeNotebookTitle } = this.props;
-    const { title } = this.state;
-    changeNotebookTitle(notebookId, title);
+    const { title, inputFieldTitle } = this.state;
+    changeNotebookTitle(notebookId, inputFieldTitle);
     this.setState({
+      title: inputFieldTitle,
       modalVisible: false,
     });
   }
@@ -55,7 +59,7 @@ class NotebookList extends React.Component {
   }
 
   render() {
-    const { title } = this.state;
+    const { title, inputFieldTitle } = this.state;
     const menu = (
       <Menu>
         <Menu.Item key='delete' onClick={() => this.deleteNotebook()}>Delete</Menu.Item>
@@ -86,7 +90,7 @@ class NotebookList extends React.Component {
               type="text"
               className="titleInputField"
               placeholder="Please enter a title..."
-              value={title}
+              value={inputFieldTitle}
               onChange={(e) => this.monitorTitle(e)}
             />
           </Modal>
