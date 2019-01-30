@@ -30,9 +30,9 @@ export const selectNotebook = (id) => {
   };
 }
 
-export const addNotebook = (id) => {
+export const addNotebook = (id, title) => {
   const maxNotebookId = id + 1;
-  const emptyNewNotebook = { id: maxNotebookId.toString(), title: 'sample' };
+  const emptyNewNotebook = { id: maxNotebookId.toString(), title: title };
   store.set(`notebooks.notebookList.${maxNotebookId}`, emptyNewNotebook);
   store.set(`notebooks.notebookIdCount`, maxNotebookId);
 
