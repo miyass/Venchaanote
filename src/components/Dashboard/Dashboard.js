@@ -9,6 +9,8 @@ import {
 import DashboardHeader from './DashboardHeader';
 import NotebookList from './NotebookList';
 
+import Sidebar from './Sidebar';
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -19,13 +21,16 @@ class Dashboard extends React.Component {
   render() {
     const { notebooks } = this.props;
     return (
-        <Layout style={{ height: '200vh' }}>
+        <Layout>
+          <Sidebar />
           <DashboardHeader />
-          <Row  style={{ marginTop: '50px' }}>
-            {notebooks.map(notebook => (
-              <NotebookList key={notebook.id} title={notebook.title} notebookId={notebook.id} />
-            ))}
-          </Row>
+          <Layout style={{ marginTop: '50px', marginLeft: 100, height: '100vh'}}>
+            <Row>
+              {notebooks.map(notebook => (
+                <NotebookList key={notebook.id} title={notebook.title} notebookId={notebook.id} />
+              ))}
+            </Row>
+          </Layout>
         </Layout>
     );
   }

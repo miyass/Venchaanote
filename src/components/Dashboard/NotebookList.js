@@ -68,7 +68,7 @@ class NotebookList extends React.Component {
     );
     return (
       <Dropdown overlay={menu} trigger={['contextMenu']}>
-        <Col xs={24} sm={10} md={10} lg={6} xl={6} style={{ margin: '30px', backgroundColor: '#fcfcfc' }}>
+        <Col xs={24} sm={20} md={20} lg={10} xl={10} style={{ margin: '30px', backgroundColor: '#fcfcfc' }}>
           <NavLink to='/note'>
             <Card
               hoverable
